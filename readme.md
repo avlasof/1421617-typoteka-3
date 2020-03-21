@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Александр](https://up.htmlacademy.ru/nodejs/3/user/1421617).
-* Наставник: `Неизвестно`.
+* Наставник: Вадим Осюков.
 
 ---
 
