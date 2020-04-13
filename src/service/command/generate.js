@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const format = require(`date-fns/format`);
 
@@ -13,7 +13,7 @@ const messageType = {
   error: {
     tooMuch: `Не больше ${FILE_SIZE_MAX} объявлений`
   },
-  success: chalk`Данные соханены в файл {underline ${FILE_NAME}}`
+  success: chalk`{green Данные соханены в файл {underline ${FILE_NAME}}}`
 };
 
 const generateList = (count) => {
@@ -38,9 +38,9 @@ const sendMessage = (error) => {
   console.log(messageType.success);
 };
 
-const saveFile = (data) => {
+const saveFile = async (data) => {
   try {
-    fs.writeFileSync(FILE_NAME, data);
+    await fs.writeFile(FILE_NAME, data);
     sendMessage();
   } catch (err) {
     sendMessage(err);
