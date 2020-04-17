@@ -2,10 +2,11 @@
 module.exports = {
   CLI_DEFAULT_COMMAND: `--help`,
   CLI_ARGS_INDEX: 2,
-  DATA_DIR: `./data/`,
-  TITLES_TXT: `titles.txt`,
-  SENTENCES_TXT: `sentences.txt`,
-  CATEGORIES_TXT: `categories.txt`,
+  DEFAULT_PORT: 3000,
+  HTTP_CODE: {
+    SUCCESS: 200,
+    NOT_FOUND: 404
+  },
   FILE_SIZE_MIN: 1,
   FILE_SIZE_MAX: 1000,
   FILE_NAME: `mocks.json`,
