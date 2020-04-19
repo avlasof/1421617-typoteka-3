@@ -3,20 +3,16 @@
 const {Router} = require(`express`);
 const router = new Router();
 
-const handleRequest = (req, res) => {
-  res.send(req.url);
-};
-
-router.get(`/`, handleRequest);
-router.get(`/register`, handleRequest);
-router.get(`/login`, handleRequest);
-router.get(`/my`, handleRequest);
-router.get(`/my/comments`, handleRequest);
-router.get(`/articles/category/:id`, handleRequest);
-router.get(`/articles/add`, handleRequest);
-router.get(`/search`, handleRequest);
-router.get(`/articles/edit/:id`, handleRequest);
-router.get(`/articles/:id`, handleRequest);
-router.get(`/categories`, handleRequest);
+router.get(`/`, (req, res) => res.render(`pages/main`));
+router.get(`/register`, (req, res) => res.render(`pages/sign-up`));
+router.get(`/login`, (req, res) => res.render(`pages/login`));
+router.get(`/search`, (req, res) => res.render(`pages/search`));
+router.get(`/categories`, (req, res) => res.render(`pages/all-categories`));
+router.get(`/my`, (req, res) => res.render(`pages/my`));
+router.get(`/my/comments`, (req, res) => res.render(`pages/comments`));
+router.get(`/articles/category/:id`, (req, res) => res.render(`pages/articles-by-category`));
+router.get(`/articles/add`, (req, res) => res.render(`pages/new-post`));
+router.get(`/articles/edit/:id`, (req, res) => res.render(`pages/post`));
+router.get(`/articles/:id`, (req, res) => res.render(`pages/post`));
 
 module.exports = router;
