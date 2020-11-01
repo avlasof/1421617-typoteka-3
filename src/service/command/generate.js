@@ -3,12 +3,15 @@
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const format = require(`date-fns/format`);
+const {nanoid} = require(`nanoid`);
 
 
 const {
-  DATA_DIR, TITLES_TXT, SENTENCES_TXT, CATEGORIES_TXT,
+  DATA_DIR, DATA_TITLES_FILE_NAME, DATA_SENTENCES_FILE_NAME, DATA_CATEGORIES_FILE_NAME, DATA_COMMENTS_FILE_NAME,
   FILE_SIZE_MIN, FILE_SIZE_MAX, FILE_NAME,
-  ANNOUNCE_MAX, FULL_TEXT_MAX, CREATED_DATE_MIN, MONTH_MILLISECONDS,
+  MAX_NUM_ANNOUNCE, MAX_NUM_TEXT, MAX_NUM_DAYS, MONTH_MILLISECONDS,
+  MAX_NUM_COMMENTS,
+  MAX_LENGTH_ID,
   EXIT_CODE
 } = require(`../constants`);
 const {getRandomIntInclusive, shuffleArray} = require(`../utils`);
@@ -20,16 +23,27 @@ const messageType = {
   success: chalk`{green Данные соханены в файл {underline ${FILE_NAME}}}`
 };
 
-const generateList = (count, titleList, descriptionList, categoryList) => {
+const generateComments = (count, comments) => (
+  Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_LENGTH_ID),
+    text: shuffleArray(comments)
+      .slice(0, getRandomIntInclusive(1, 3))
+      .join(` `),
+  }))
+);
+
+const generateList = (count, titleList, descriptionList, categoryList, commentList) => {
   const createdDateMax = Date.now();
-  const createdDateMin = createdDateMax - CREATED_DATE_MIN * MONTH_MILLISECONDS;
+  const createdDateMin = createdDateMax - MAX_NUM_DAYS * MONTH_MILLISECONDS;
 
   return Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_LENGTH_ID),
     title: titleList[getRandomIntInclusive(0, titleList.length - 1)],
-    announce: shuffleArray(descriptionList).slice(0, ANNOUNCE_MAX).join(` `),
-    fullText: shuffleArray(descriptionList).slice(0, FULL_TEXT_MAX).join(` `),
+    announce: shuffleArray(descriptionList).slice(0, MAX_NUM_ANNOUNCE).join(` `),
+    fullText: shuffleArray(descriptionList).slice(0, MAX_NUM_TEXT).join(` `),
     createdDate: format(getRandomIntInclusive(createdDateMin, createdDateMax), `yyyy-MM-dd HH:mm:ss`),
     category: Array(getRandomIntInclusive(0, categoryList.length - 1)).fill().map((item, index) => categoryList[index]),
+    comments: generateComments(getRandomIntInclusive(1, MAX_NUM_COMMENTS), commentList),
   }));
 };
 
@@ -71,10 +85,11 @@ const run = async (count) => {
     return;
   }
 
-  const titleList = await readFile(TITLES_TXT);
-  const descriptionList = await readFile(SENTENCES_TXT);
-  const categoryList = await await readFile(CATEGORIES_TXT);
-  const data = JSON.stringify(generateList(count, titleList, descriptionList, categoryList));
+  const titleList = await readFile(DATA_TITLES_FILE_NAME);
+  const descriptionList = await readFile(DATA_SENTENCES_FILE_NAME);
+  const categoryList = await readFile(DATA_CATEGORIES_FILE_NAME);
+  const commentList = await readFile(DATA_COMMENTS_FILE_NAME);
+  const data = JSON.stringify(generateList(count, titleList, descriptionList, categoryList, commentList));
 
   saveFile(data);
 };
