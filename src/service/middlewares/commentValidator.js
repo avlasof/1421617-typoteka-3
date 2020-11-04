@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 
   if (!keysExists) {
     return res.status(HTTP_CODE.BAD_REQUEST)
-      .send(`Bad request`);
+      .json({message: `Bad request`});
   }
 
   return next();

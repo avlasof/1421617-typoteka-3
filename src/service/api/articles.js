@@ -8,10 +8,8 @@ const {
   commentValidator,
 } = require(`../middlewares`);
 
-const route = new Router();
-
-module.exports = (app, articleService, commentService) => {
-  app.use(`/articles`, route);
+module.exports = (articleService, commentService) => {
+  const route = new Router();
 
   // ресурс возвращает список объявлений
   route.get(`/`, (req, res) => {
@@ -68,7 +66,7 @@ module.exports = (app, articleService, commentService) => {
     const comment = commentService.drop(article, commentId);
 
     if (!comment) {
-      return res.status(HTTP_CODE.NOT_FOUND).send(`Comment with ${commentId} not found`);
+      return res.status(HTTP_CODE.NOT_FOUND).json({message: `Comment with ${commentId} not found`});
     }
 
     return res.status(HTTP_CODE.SUCCESS).json(comment);
@@ -81,4 +79,6 @@ module.exports = (app, articleService, commentService) => {
 
     return res.status(HTTP_CODE.SUCCESS).json(comments);
   });
+
+  return route;
 };
