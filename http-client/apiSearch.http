@@ -1,0 +1,8 @@
+### POSITIVE
+GET http://localhost:3000/api/search?title=Самый
+
+### POSITIVE пустой ответ
+GET http://localhost:3000/api/search?title=123
+
+### NEGATIVE
+GET http://localhost:3000/api/search

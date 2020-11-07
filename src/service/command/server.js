@@ -4,6 +4,7 @@ const express = require(`express`);
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {DEFAULT_PORT, HTTP_CODE, FILE_NAME} = require(`../constants`);
+const routes = require(`../api`);
 
 const app = express();
 
@@ -18,13 +19,14 @@ const getPosts = async (req, res) => {
   }
 };
 
-const run = (port) => {
+const run = async (port) => {
   port = port || DEFAULT_PORT;
 
   app
     .use(express.json())
+    .use(`/api`, await routes())
     .get(`/posts`, getPosts)
-    .use((req, res) => res.status(HTTP_CODE.NOT_FOUND).send(`Not found`))
+    .use((req, res) => res.status(HTTP_CODE.NOT_FOUND).json({message: `Not found`}))
     .listen(port, () => console.log(chalk`{blue Сервер работает на http://localhost:${port}}`));
 };
 
